@@ -1,4 +1,5 @@
 import "./Blogs.css";
+import { Link } from "react-router-dom";
 const Blog = ({ blog }) => {
   console.log(blog);
   return (
@@ -11,6 +12,7 @@ const Blog = ({ blog }) => {
           <p>{new Date(blog.publishedAt).toLocaleString("es")}</p>
         </div>
         <p className="description">{blog.description}</p>
+        <Link to={`/blogs/${blog.source.id}`}className="verMas">Ver mas</Link>
       </div>
     </div>
   );
