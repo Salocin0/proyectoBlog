@@ -9,6 +9,8 @@ export const AuthProvider = ({ children }) => {
     return store ? store : false;
   });
 
+//sesionid
+
   useEffect(() => {
     localStorage.setItem("isLogged", isLogged);
   }, [isLogged]);

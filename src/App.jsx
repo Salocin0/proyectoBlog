@@ -7,6 +7,9 @@ import Footer from "./components/Footer";
 import {AuthProvider} from "./context/AuthContext";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
+import CrearBlog from "./pages/crear-blog/CrearBlog";
+import MisBlogs from "./pages/mis-blogs/MisBlogs";
+import ModificarBlog from "./pages/modificar-blog/ModificarBlog";
 
 function App() {
   return (
@@ -14,18 +17,11 @@ function App() {
       <BrowserRouter>
         <Header/>
         <Routes>
-          <Route path="/" element={<Home />} />{" "}
-          {/*todos los blogs/ consultar todos los que esten habilitados*/}
+          <Route path="/" element={<Home />} />
           <Route path="/blogs/:id" element={<DetalleBlog />} />
-          {/*ver el detalle de 1 blog / consultar 1*/}
-          {/*ABMC / CRUD alta baja modificacion y consulta*/}
-          <Route path="/crear-blog" element={<></>} />
-          {/*form alta*/}
-          <Route path="/modificar-blog/:idblog" element={<></>} />
-          {/*form modificacion*/}
-          {/*borrado fisico: borramos el blog de la base de datos, borrado logico: cambiamos un estado en el blog*/}
-          <Route path="/mis-blogs" element={<></>} />
-          {/*listado de cards*/}
+          <Route path="/crear-blog" element={<CrearBlog/>} />
+          <Route path="/modificar-blog/:idblog" element={<ModificarBlog/>} />
+          <Route path="/mis-blogs" element={<MisBlogs/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
         </Routes>

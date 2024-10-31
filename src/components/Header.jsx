@@ -1,7 +1,10 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
+import { toast } from "react-toastify";
 const Header = () => {
   const { isLogged, setIsLogged } = useContext(AuthContext);
 
@@ -14,6 +17,11 @@ const Header = () => {
     { to: "/login", text: "Login" },
     { to: "/register", text: "register" },
   ];
+
+const handleLogout = () => {
+  setIsLogged(false);
+  toast.success("Logout");
+};
 
   return (
     <nav className="topnav">
@@ -31,10 +39,11 @@ const Header = () => {
               {link.text}
             </Link>
           ))}
-        {isLogged && <a onClick={() => setIsLogged(false)}>cerrar</a>}
+        {isLogged && <a onClick={() => handleLogout()}>Cerrar Sesion</a>}
         {!isLogged &&
           linksLogout.map((link) => (
             <Link key={link.to} to={link.to}>
+              <FontAwesomeIcon icon={faHouse} className="icono" />
               {link.text}
             </Link>
           ))}

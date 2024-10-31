@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "./Login.css";
 const Login = () => {
   const { setIsLogged } = useContext(AuthContext);
@@ -11,18 +12,19 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (usuario.length > 0 && contraseña.length > 0) {
+      toast.success("sesion iniciada");
       setIsLogged(true);
       navigate("/");
     } else {
-      alert("complete los campos para iniciar sesion");
+      toast.error("ingrese usuario y contraseña");
     }
   };
   return (
-    <div className="contenedorLogin">
+    <div className="contenedor">
       <form className="form">
         <h2>Iniciar sesion</h2>
         <div className="input">
-          <label htmlFor="usuario" className="label">Usuario {usuario}</label>
+          <label htmlFor="usuario" className="label">Usuario</label>
           <input
             type="text"
             id="usuario"
