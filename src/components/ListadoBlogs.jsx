@@ -1,5 +1,5 @@
 import { newsMock } from "../mocks/newsMock";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Blog from "../pages/Home/Blogs";
 import BlogAdmin from "../pages/mis-blogs/BlogsAdmin";
 const ListadoBlogs = ({ isLogged = false }) => {
@@ -9,6 +9,15 @@ const ListadoBlogs = ({ isLogged = false }) => {
   let blogsFilter = blogs
   //fetch al back para traer solo los blogs de este usuario, que la card que use sea la de admin
   //fetch al back para traer todos los blogs de todos los usuarios, que la card sea la de user
+
+  useEffect(() => {
+    const fetchback = async () => {
+      const response = await fetch("http://localhost:3000/productos")
+    const data = await response.json()
+    console.log(data)
+    }
+    fetchback()
+  },[])
 
   const handleDelete = (id) => {
     console.log("llega",id)
