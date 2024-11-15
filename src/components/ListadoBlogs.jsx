@@ -1,46 +1,47 @@
-import { newsMock } from "../mocks/newsMock";
 import { useEffect, useState } from "react";
 import Blog from "../pages/Home/Blogs";
 import BlogAdmin from "../pages/mis-blogs/BlogsAdmin";
 const ListadoBlogs = ({ isLogged = false }) => {
+  const backurl = import.meta.env.VITE_BACK_URL
   //si es true hardcodeamos si es false mostramos todo
-  const [blogs, setBlogs] = useState(newsMock);
+  const [blogs, setBlogs] = useState([]);
   //const [blogsFilter, setBlogsFilter] = useState([]);
   let blogsFilter = blogs
-  //fetch al back para traer solo los blogs de este usuario, que la card que use sea la de admin
-  //fetch al back para traer todos los blogs de todos los usuarios, que la card sea la de user
+
+  const fetchback = async () => {
+    const response = await fetch(`${backurl}blogs`)
+  const responsejson = await response.json()
+  console.log(responsejson.data)
+  setBlogs(responsejson.data)
+  }
+
+  const fetchBorrarBlog = async (id) => {
+    const response = await fetch(`${backurl}blogs/${id}`, { 
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+     })
+  const responsejson = await response.json()
+  console.log(responsejson.data)
+  fetchback()
+  }
+
 
   useEffect(() => {
-    const fetchback = async () => {
-      const response = await fetch("http://localhost:3000/productos")
-    const data = await response.json()
-    console.log(data)
-    }
     fetchback()
   },[])
 
   const handleDelete = (id) => {
-    console.log("llega",id)
-    blogsFilter= blogsFilter.filter((blog)=> !(blog.source.id == id))
-    //setBlogsFilter(blogsFilter.filter((blog)=> !(blog.source.id == id)))
-    console.log(blogsFilter)
-    //fetch para eliminar
+    fetchBorrarBlog(id)
+ 
   }
 
   if (isLogged) {
-    /*setBlogsFilter(blogs.filter(
-      (blog) => blog.author === "Investing.com"
-    ))*/
 
-      blogsFilter = blogs.filter(
-        (blog) => blog.author === "Investing.com"
-      );
-     /* setBlogsFilter(blogs.filter(
-        (blog) => blog.author === "Investing.com"))*/
+      blogsFilter = blogs || []
     return (
       <>
-        {blogsFilter.map((blog) => (
-          <BlogAdmin blog={blog} key={blog.source.id} handleDelete={handleDelete} />
+        {blogsFilter?.map((blog) => (
+          <BlogAdmin blog={blog} key={blog.id} handleDelete={handleDelete} />
         ))}
       </>
     );
@@ -49,7 +50,7 @@ const ListadoBlogs = ({ isLogged = false }) => {
   return (
     <>
       {blogs.map((blog) => (
-        <Blog blog={blog} key={blog.source.id} />
+        <Blog blog={blog} key={blog.id} />
       ))}
     </>
   );

@@ -1,32 +1,59 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const CrearBlog = () => {
+  const navigate = useNavigate();
+  const backurl = import.meta.env.VITE_BACK_URL
   const [titulo, setTitulo] = useState("");
   const [imagen, setImagen] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [contenido, setContenido] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const blog = {
-      title: titulo, //un blog (titulo:"un blog")
-      description: descripcion,
-      content: contenido,
-      urlToImage: imagen,
-      publishedAt: new Date(),
-      author: "user1",
+      titulo: titulo, //un blog (titulo:"un blog")
+      descripcion: descripcion,
+      contenido: contenido,
+      imagen: imagen,
+      //author: "user1",
     };
-    //fetch al back
+    const respuesta = await fetchback(blog);
+    if (respuesta){
+      toast.success("Blog creado");
+      navigate("/mis-blogs");
+    }else{
+      toast.error("Blog no creado");
+    }
     console.log(blog);
-    toast.success("Blog creado");
   };
+
+  const fetchback = async (blog) => {
+    const response = await fetch(`${backurl}blogs/`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(blog),
+    }); // metodo body headers 
+    const responsejson = await response.json();
+    console.log(responsejson.data);
+    if (response.ok) {
+      return responsejson.data
+    }else{
+      return null
+    }
+  };
+  
 
   return (
     <div className="contenedor">
       <form onSubmit={handleSubmit} className="form">
-      <h1>Crear Blog</h1>
+        <h1>Crear Blog</h1>
         <div className="input">
-          <label htmlFor="titulo" className="label">Titulo</label>
+          <label htmlFor="titulo" className="label">
+            Titulo
+          </label>
           <input
             type="text"
             id="titulo"
@@ -34,7 +61,9 @@ const CrearBlog = () => {
           />
         </div>
         <div className="input">
-          <label htmlFor="descripcion" className="label">Descripcion</label>
+          <label htmlFor="descripcion" className="label">
+            Descripcion
+          </label>
           <input
             type="text"
             id="descripcion"
@@ -42,7 +71,9 @@ const CrearBlog = () => {
           />
         </div>
         <div className="input">
-          <label htmlFor="contenido" className="label">Contenido</label>
+          <label htmlFor="contenido" className="label">
+            Contenido
+          </label>
           <textarea
             name=""
             id="contenido"
@@ -52,7 +83,9 @@ const CrearBlog = () => {
           ></textarea>
         </div>
         <div className="input">
-          <label htmlFor="imagen" className="label">Imagen</label>
+          <label htmlFor="imagen" className="label">
+            Imagen
+          </label>
           <input
             type="text"
             id="imagen"
@@ -60,7 +93,9 @@ const CrearBlog = () => {
           />
         </div>
 
-        <button type="submit" className="boton">Crear Blog</button>
+        <button type="submit" className="boton">
+          Crear Blog
+        </button>
       </form>
     </div>
   );
