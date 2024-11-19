@@ -1,36 +1,70 @@
-import { newsMock } from "../../mocks/newsMock";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 const ModificarBlog = () => {
+  const backurl = import.meta.env.VITE_BACK_URL
   const { idblog } = useParams();
-  const [blog, setBlog] = useState(
-    ...newsMock.filter((blog) => blog.source.id == idblog)
-  );
+  const [blog, setBlog] = useState({});
+  const [titulo, setTitulo] = useState(blog?.title);
+  const [imagen, setImagen] = useState(blog?.urlToImage);
+  const [descripcion, setDescripcion] = useState(blog?.description);
+  const [contenido, setContenido] = useState(blog?.content);
+  //fetch al back con el idblog para obtener el blog
+  useEffect(() => {
+    const fetchBack = async () => {
+      const response = await fetch(`${backurl}blogs/${idblog}`);
+      const responsejson = await response.json();
+      console.log(responsejson.data);
+      setBlog(responsejson.data);
+    };
+    fetchBack();
+  },[])
+
+  useEffect(() => {
+    setTitulo(blog.titulo)
+    setImagen(blog.imagen)
+    setDescripcion(blog.descripcion)
+    setContenido(blog.contenido)
+  },[blog])
+
 
   const navigate = useNavigate();
 
-  const [titulo, setTitulo] = useState(blog.title);
-  const [imagen, setImagen] = useState(blog.urlToImage);
-  const [descripcion, setDescripcion] = useState(blog.description);
-  const [contenido, setContenido] = useState(blog.content);
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const blog = {
-      title: titulo, //un blog (titulo:"un blog")
-      description: descripcion,
-      content: contenido,
-      urlToImage: imagen,
-      publishedAt: new Date(),//la fecha de actualizacion
-      author: "user1",
+      titulo: titulo, //un blog (titulo:"un blog")
+      descripcion: descripcion,
+      contenido: contenido,
+      imagen: imagen,
+      //author: "user1",
     };
     //fetch al back para modificar
-    console.log(blog);
-    toast.success("Blog modificado");
-    navigate("/mis-blogs");
+    const respuesta = await handlefetch(blog)
+    console.log(respuesta);
+    console.log(respuesta.ok)
+    if(respuesta.status === "success"){
+      toast.success("Blog modificado");
+      navigate("/mis-blogs");
+    }else{
+      toast.error("Blog no modificado");
+    }
   };
+
+  const handlefetch = async (blog) => {
+    const response = await fetch(`${backurl}blogs/${idblog}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(blog),
+    })
+    const responsejson = await response.json()
+    return responsejson
+  }
 
   return (
     <div className="contenedor">
