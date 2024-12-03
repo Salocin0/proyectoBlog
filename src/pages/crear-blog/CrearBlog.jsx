@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 const CrearBlog = () => {
   const navigate = useNavigate();
   const backurl = import.meta.env.VITE_BACK_URL
@@ -8,6 +10,7 @@ const CrearBlog = () => {
   const [imagen, setImagen] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [contenido, setContenido] = useState("");
+  const { accessToken,handleRefreshToken } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,9 +19,13 @@ const CrearBlog = () => {
       descripcion: descripcion,
       contenido: contenido,
       imagen: imagen,
-      //author: "user1",
+      autor: "674f8962175ed4e77e7dc125",
     };
-    const respuesta = await fetchback(blog);
+    let respuesta = await fetchback(blog);
+    if(respuesta === -1){
+      respuesta = await fetchback(blog);
+    }
+    if(respuesta.status)
     if (respuesta){
       toast.success("Blog creado");
       navigate("/mis-blogs");
@@ -33,9 +40,17 @@ const CrearBlog = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization":accessToken
       },
       body: JSON.stringify(blog),
     }); // metodo body headers 
+    if(response.status === 401){
+      const res = await handleRefreshToken();
+      if(res === -1){
+        navigate("/login");
+      }
+      
+    }
     const responsejson = await response.json();
     console.log(responsejson.data);
     if (response.ok) {

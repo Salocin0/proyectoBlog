@@ -6,7 +6,7 @@ import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import { toast } from "react-toastify";
 const Header = () => {
-  const { isLogged, setIsLogged } = useContext(AuthContext);
+  const { isLogged, setIsLogged,setAccessToken,setRefreshToken } = useContext(AuthContext);
 
   const links = [{ to: "/", text: "inicio" }];
   const linksLogin = [
@@ -20,6 +20,8 @@ const Header = () => {
 
 const handleLogout = () => {
   setIsLogged(false);
+  setAccessToken(null);
+  setRefreshToken(null);
   toast.success("Logout");
 };
 
