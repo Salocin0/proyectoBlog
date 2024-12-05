@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import { toast } from "react-toastify";
+import "./../css/otrocss.css"
 const Header = () => {
   const { isLogged, setIsLogged,setAccessToken,setRefreshToken } = useContext(AuthContext);
 
